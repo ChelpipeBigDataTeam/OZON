@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <p align="right" style="color:#000000; font-size:17px">Вы вошли в систему как: {{ current_user.username }}</p>
+    <p align="right"><a href="{{ url_for('logout') }}">Выйти</a></p>
+    <p align="center" style="color:#000000; font-size:28px">Рекомендательная система АКП "Железный озон 32" АО "ПНТЗ"</p>
+    {% if args["method"] == "POST" %}
+        <center>
+            <p align="right"><a href="{{ url_for('login') }}">Расчитать заново</a></p>
+            {% if args["error12"] %}
+                <p align="center" style="color:#000000; font-size:16px">{{args["error12"]}}</p>
+            {% endif %}
+            {% if args["error1"] and args["error11"] %}
+                <p align="center" style="color:#000000; font-size:16px">{{args["error11"]}}</p>
+            {% elif args["error1"] %}
+                <p align="center" style="color:#000000; font-size:16px">{{args["error1"]}}</p>
+            {% elif args["error2"] and args["error11"]%}
+                <p align="center" style="color:#000000; font-size:16px">{{args["error11"]}}</p>
+                <p align="center" style="color:#000000; font-size:16px">{{args["error2"]}}</p>
+            {% elif args["error2"]%}
+                <p align="center" style="color:#000000; font-size:16px">{{args["error2"]}}</p>
+            {% else %}
+                <p align="center" style="color:#000000; font-size:16px">Данные расcчитаны</p>
+                {% if args["error11"] %}
+                     <p align="center" style="color:#000000; font-size:16px">{{args["error11"]}}</p>
+                {% endif%}
+                {% if args["error3"] %}
+                    <p align="center" style="color:#000000; font-size:16px">{{args["error3"]}}</p>
+                {% endif%}
+                <form action="/downloadExcelFile">
+                    <button type="submit">Сохранить файл</button>
+                </form>
+            {% endif%}
+        </center>
+    {% else %}
+        <p align="right"><a href="{{ url_for('downloadInputFiles') }}">Скачать входной файл</a></p>
+        <form action="/" method="POST" enctype="multipart/form-data">
+            <center>
+                <input type="file" name="file" id="file_id">
+                <button type="submit">Рассчитать</button>
+            </center>
+        </form>
+    {% endif %}
+
+{% endblock %}
